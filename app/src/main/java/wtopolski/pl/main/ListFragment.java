@@ -25,9 +25,5 @@ public class ListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String[] projection = new String[] {DBContract._ID, DBContract.TITLE_COLUMN, DBContract.DESC_COLUMN};
-        Cursor cursor = getActivity().getContentResolver().query(ElementProvider.CONTENT_URI, projection, null, null, null);
-
-
     }
 }

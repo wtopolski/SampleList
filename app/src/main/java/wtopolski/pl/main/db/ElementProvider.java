@@ -3,10 +3,15 @@ package wtopolski.pl.main.db;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.text.TextUtils;
+
+import wtopolski.pl.main.R;
 
 /**
  * Created by 10c on 2015-11-12.
@@ -14,67 +19,131 @@ import android.net.Uri;
 public class ElementProvider extends ContentProvider {
 
     private ElementDBHelper helper;
-    private SQLiteDatabase db;
 
-    public static final String PROVIDER_NAME = "wtopolski.pl.provider";
-    public static final String URL = "content://" + PROVIDER_NAME + "/elements";
-    public static final Uri CONTENT_URI = Uri.parse(URL);
+    public static String AUTHORITY;
+    public static Uri ELEMENT_URI;
+
+    static final int ELEMENT = 1;
+    static final int ELEMENT_LIST = 2;
+
+    private UriMatcher uriMatcher;
 
     @Override
     public boolean onCreate() {
+        AUTHORITY = getContext().getString(R.string.element_provider);
+        ELEMENT_URI = Uri.parse("content://" + AUTHORITY + "/elements");
+
+        uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(AUTHORITY, "elements/*", ELEMENT);
+        uriMatcher.addURI(AUTHORITY, "elements", ELEMENT_LIST);
+
         helper = new ElementDBHelper(getContext());
-        db = helper.getWritableDatabase();
+
         return true;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        SQLiteDatabase db = helper.getReadableDatabase();
 
-        //String lastSegment = uri.getLastPathSegment();
+        switch (uriMatcher.match(uri)) {
+            case ELEMENT_LIST:
+                return db.query(DBContract.ElementTable.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
 
-        //SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        //queryBuilder.setTables(DBContract.TABLE_NAME);
-/*
-        if () {
+            case ELEMENT:
+                String selectionTmp = DBContract.ElementTable._ID + "='" + uri.getLastPathSegment() + "'";
+                if (TextUtils.isEmpty(selection)) {
+                    selection = "";
+                } else {
+                    selection += " and ";
+                }
+                selection = selection + selectionTmp;
+                return db.query(DBContract.ElementTable.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
 
-        } else {
-            queryBuilder.appendWhere(DBContract._ID + "=" + uri.getLastPathSegment());
-        }*/
-        //Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, DBContract._ID);
-        //cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
-        //String[] columns = new String[] {DBContract._ID, DBContract.TITLE_COLUMN, DBContract.DESC_COLUMN};
-
-        return db.query(DBContract.TABLE_NAME, projection, null, null, null, null, null);
-    }
-
-    @Override
-    public String getType(Uri uri) {
-        return null;
+            default:
+                throw new IllegalArgumentException("Unsupported URI for query : " + uri);
+        }
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long id = db.insert(DBContract.TABLE_NAME, null, values);
+        SQLiteDatabase db = helper.getWritableDatabase();
 
-        if (id > 0) {
-            Uri newUri = ContentUris.withAppendedId(CONTENT_URI, id);
-            getContext().getContentResolver().notifyChange(newUri, null);
-            return newUri;
+        switch (uriMatcher.match(uri)) {
+            case ELEMENT_LIST:
+                long id = db.insert(DBContract.ElementTable.TABLE_NAME, null, values);
+                if (id > 0) {
+                    Uri notifyUri = ContentUris.withAppendedId(uri, id);
+                    getContext().getContentResolver().notifyChange(notifyUri, null);
+                    return notifyUri;
+                }
+                throw new RuntimeException("Problem while inserting into uri" + uri);
+
+            default:
+                throw new IllegalArgumentException("Unsupported URI for insert : " + uri);
         }
-
-        return null;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        int count = db.delete(DBContract.TABLE_NAME, selection, selectionArgs);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        int count;
+
+        switch (uriMatcher.match(uri)) {
+            case ELEMENT_LIST:
+                count = db.delete(DBContract.ElementTable.TABLE_NAME, selection, selectionArgs);
+                break;
+
+            case ELEMENT:
+                String selectionTmp = DBContract.ElementTable._ID + "='" + uri.getLastPathSegment() + "'";
+                if (TextUtils.isEmpty(selection)) {
+                    selection = "";
+                } else {
+                    selection += " and ";
+                }
+                selection = selection + selectionTmp;
+                count = db.delete(DBContract.ElementTable.TABLE_NAME, selection, selectionArgs);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unsupported URI for delete : " + uri);
+        }
+
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        throw new RuntimeException("NOT IMPLEMENTED");
+        SQLiteDatabase db = helper.getWritableDatabase();
+        int count;
+
+        switch (uriMatcher.match(uri)) {
+            case ELEMENT_LIST:
+                count = db.update(DBContract.ElementTable.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
+            case ELEMENT:
+                String selectionTmp = DBContract.ElementTable._ID + "='" + uri.getLastPathSegment() + "'";
+                if (TextUtils.isEmpty(selection)) {
+                    selection = "";
+                } else {
+                    selection += " and ";
+                }
+                selection = selection + selectionTmp;
+                count = db.update(DBContract.ElementTable.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unsupported URI for update : " + uri);
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
+    }
+
+    @Override
+    public String getType(Uri uri) {
+        throw new IllegalArgumentException("Unsupported URI: " + uri);
     }
 }

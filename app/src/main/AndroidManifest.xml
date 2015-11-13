@@ -17,7 +17,7 @@
         </activity>
 
         <provider
-            android:authorities="wtopolski.pl.provider"
+            android:authorities="@string/element_provider"
             android:name=".db.ElementProvider"
             android:exported="false" />
 
