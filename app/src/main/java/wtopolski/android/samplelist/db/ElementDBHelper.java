@@ -1,4 +1,4 @@
-package wtopolski.pl.main.db;
+package wtopolski.android.samplelist.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

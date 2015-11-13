@@ -1,17 +1,15 @@
-package wtopolski.pl.main.db;
+package wtopolski.android.samplelist.db;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import wtopolski.pl.main.R;
+import wtopolski.android.samplelist.R;
 
 /**
  * Created by 10c on 2015-11-12.

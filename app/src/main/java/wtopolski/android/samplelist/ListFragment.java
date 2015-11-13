@@ -1,15 +1,10 @@
-package wtopolski.pl.main;
+package wtopolski.android.samplelist;
 
 import android.app.Fragment;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import wtopolski.pl.main.db.DBContract;
-import wtopolski.pl.main.db.ElementProvider;
-
 
 /**
  * A placeholder fragment containing a simple view.

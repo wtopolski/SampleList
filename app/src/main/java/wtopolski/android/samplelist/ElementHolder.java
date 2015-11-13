@@ -1,8 +1,9 @@
-package wtopolski.pl.main;
+package wtopolski.android.samplelist;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import wtopolski.android.samplelist.R;
 
 /**
  * Created by 10c on 2015-11-12.

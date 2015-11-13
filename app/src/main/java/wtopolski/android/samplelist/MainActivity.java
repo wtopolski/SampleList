@@ -1,10 +1,9 @@
-package wtopolski.pl.main;
+package wtopolski.android.samplelist;
 
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +12,8 @@ import android.view.MenuItem;
 
 import java.util.Date;
 
-import wtopolski.pl.main.db.DBContract;
-import wtopolski.pl.main.db.ElementProvider;
+import wtopolski.android.samplelist.db.DBContract;
+import wtopolski.android.samplelist.db.ElementProvider;
 
 
 public class MainActivity extends Activity {
@@ -64,6 +63,10 @@ public class MainActivity extends Activity {
                 String desc = cursor.getString(descColumnIndex);
                 Log.d("wtopolski", "title: " + title + " desc: " + desc);
             } while (cursor.moveToNext());
+        }
+
+        if (!cursor.isClosed()){
+            cursor.close();
         }
 
         // Update test
