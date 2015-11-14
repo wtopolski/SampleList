@@ -1,23 +1,39 @@
 package wtopolski.android.samplelist;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements ElementListFragment.ListFragmentItemClickListener {
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        mToolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(mToolbar);
+
+        mFragmentManager = getFragmentManager();
+
+        if (mFragmentManager.findFragmentById(R.id.fragment_container) == null) {
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            ElementListFragment fragment = new ElementListFragment();
+            fragmentTransaction.add(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
     }
 
     @Override
@@ -95,6 +111,22 @@ public class MainActivity extends AppCompatActivity implements ElementListFragme
 
     @Override
     public void onListFragmentItemClick(long position) {
-        Toast.makeText(this, "Position " + position, Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putLong(ElementSingleFragment.ARGUMENT_ID, position);
+
+        ElementSingleFragment fragment = new ElementSingleFragment();
+        fragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mFragmentManager.popBackStackImmediate()) {
+            super.onBackPressed();
+        }
     }
 }
