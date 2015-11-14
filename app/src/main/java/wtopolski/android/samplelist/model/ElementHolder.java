@@ -1,10 +1,11 @@
-package wtopolski.android.samplelist;
+package wtopolski.android.samplelist.model;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import wtopolski.android.samplelist.R;
 import wtopolski.android.samplelist.model.Element;
 
 /**

@@ -18,7 +18,7 @@
     <fragment
         tools:layout="@layout/fragment_main"
         android:id="@+id/fragment"
-        android:name="wtopolski.android.samplelist.ListFragment"
+        android:name="wtopolski.android.samplelist.ElementListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/main_toolbar"

@@ -1,7 +1,5 @@
 package wtopolski.android.samplelist;
 
-import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,12 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.Date;
-
-import wtopolski.android.samplelist.db.DBContract;
-import wtopolski.android.samplelist.db.ElementProvider;
-
-public class MainActivity extends AppCompatActivity implements ListFragment.ListFragmentItemClickListener {
+public class MainActivity extends AppCompatActivity implements ElementListFragment.ListFragmentItemClickListener {
     private Toolbar toolbar;
 
     @Override

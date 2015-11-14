@@ -8,11 +8,12 @@ import android.view.ViewGroup;
 
 import wtopolski.android.samplelist.db.DBContract;
 import wtopolski.android.samplelist.model.Element;
+import wtopolski.android.samplelist.model.ElementHolder;
 
 /**
  * Created by 10c on 2015-11-12.
  */
-public class ElementAdapter extends RecyclerView.Adapter<ElementHolder> {
+public class ElementListAdapter extends RecyclerView.Adapter<ElementHolder> {
 
     private Cursor mCursor;
 
@@ -20,7 +21,7 @@ public class ElementAdapter extends RecyclerView.Adapter<ElementHolder> {
     private int titleColumnIndex;
     private int descColumnIndex;
 
-    private ListFragment.ListFragmentItemClickListener mListener;
+    private ElementListFragment.ListFragmentItemClickListener mListener;
 
     @Override
     public ElementHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -73,7 +74,7 @@ public class ElementAdapter extends RecyclerView.Adapter<ElementHolder> {
         notifyDataSetChanged();
     }
 
-    public void setListener(ListFragment.ListFragmentItemClickListener listener) {
+    public void setListener(ElementListFragment.ListFragmentItemClickListener listener) {
         mListener = listener;
     }
 }

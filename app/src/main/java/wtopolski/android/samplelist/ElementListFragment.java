@@ -20,12 +20,12 @@ import wtopolski.android.samplelist.db.ElementProvider;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ElementListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOAD_CURSOR_ID = 1;
 
     private ListFragmentItemClickListener mListener;
-    private ElementAdapter mAdapter;
+    private ElementListAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
     @Override
@@ -41,7 +41,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new ElementAdapter();
+        mAdapter = new ElementListAdapter();
     }
 
     @Override
