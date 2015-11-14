@@ -1,13 +1,17 @@
-package wtopolski.pl.main;
+package wtopolski.android.samplelist;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import wtopolski.android.samplelist.model.Element;
 
 /**
  * Created by 10c on 2015-11-12.
  */
 public class ElementHolder extends RecyclerView.ViewHolder {
+    private Element mElement;
 
     private TextView mTitle;
     private TextView mDesc;
@@ -15,13 +19,18 @@ public class ElementHolder extends RecyclerView.ViewHolder {
 
     public ElementHolder(View itemView) {
         super(itemView);
+        mElement = new Element();
         view = itemView;
         mTitle = (TextView) view.findViewById(R.id.list_element_title);
         mDesc = (TextView) view.findViewById(R.id.list_element_desc);
     }
 
-    public void set(String title, String desc) {
-        mTitle.setText(title);
-        mDesc.setText(desc);
+    public void updateView() {
+        mTitle.setText(mElement.getTitle());
+        mDesc.setText(mElement.getDesc());
+    }
+
+    public Element getElement() {
+        return mElement;
     }
 }

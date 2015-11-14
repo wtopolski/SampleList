@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="wtopolski.pl.main" >
+    package="wtopolski.android.samplelist" >
 
     <application
         android:allowBackup="true"
@@ -17,7 +17,7 @@
         </activity>
 
         <provider
-            android:authorities="wtopolski.pl.provider"
+            android:authorities="@string/element_provider"
             android:name=".db.ElementProvider"
             android:exported="false" />
 

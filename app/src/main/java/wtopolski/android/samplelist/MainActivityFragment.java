@@ -1,11 +1,10 @@
-package wtopolski.pl.main;
+package wtopolski.android.samplelist;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 /**
  * A placeholder fragment containing a simple view.
