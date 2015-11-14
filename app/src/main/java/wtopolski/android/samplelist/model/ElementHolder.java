@@ -21,9 +21,9 @@ public class ElementHolder extends RecyclerView.ViewHolder {
     public ElementHolder(View itemView) {
         super(itemView);
         mElement = new Element();
-        view = itemView;
-        mTitle = (TextView) view.findViewById(R.id.list_element_title);
-        mDesc = (TextView) view.findViewById(R.id.list_element_desc);
+        view = itemView.findViewById(R.id.list_element_box);
+        mTitle = (TextView) itemView.findViewById(R.id.list_element_title);
+        mDesc = (TextView) itemView.findViewById(R.id.list_element_desc);
     }
 
     public void updateView() {
