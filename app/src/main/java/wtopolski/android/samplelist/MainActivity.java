@@ -1,12 +1,9 @@
 package wtopolski.android.samplelist;
 
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +11,6 @@ import java.util.Date;
 
 import wtopolski.android.samplelist.db.DBContract;
 import wtopolski.android.samplelist.db.ElementProvider;
-
 
 public class MainActivity extends Activity {
 
@@ -36,6 +32,7 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
+        /*
         // Insert test
         ContentValues values = new ContentValues();
         values.put(DBContract.ElementTable.TITLE_COLUMN, "title " + (new Date()).toGMTString());
@@ -79,7 +76,7 @@ public class MainActivity extends Activity {
         Uri deleteUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_URI, firstId);
         int deleteCount = getContentResolver().delete(deleteUri, null, null);
         Log.d("wtopolski", "deleteCount: " + deleteCount);
-
+        */
     }
 
     @Override
