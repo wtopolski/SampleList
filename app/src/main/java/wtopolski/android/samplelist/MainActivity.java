@@ -1,9 +1,10 @@
 package wtopolski.android.samplelist;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,14 +13,18 @@ import java.util.Date;
 import wtopolski.android.samplelist.db.DBContract;
 import wtopolski.android.samplelist.db.ElementProvider;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
+        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,7 +37,7 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
-        /*
+/*
         // Insert test
         ContentValues values = new ContentValues();
         values.put(DBContract.ElementTable.TITLE_COLUMN, "title " + (new Date()).toGMTString());

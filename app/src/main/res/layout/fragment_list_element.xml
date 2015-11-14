@@ -22,14 +22,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/list_element_title"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textAppearance="@android:style/TextAppearance.Holo.Medium"
                 tools:text="Title" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/list_element_desc"
-                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                android:textAppearance="@android:style/TextAppearance.Holo.Small"
                 tools:text="Description" />
 
         </LinearLayout>
