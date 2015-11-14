@@ -15,6 +15,10 @@ public class ElementSingleFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_single, container, false);
+        View view = inflater.inflate(R.layout.fragment_single, container, false);
+
+        ((MainActivity)getActivity()).mToolbar.setSubtitle(R.string.fragment_single);
+
+        return view;
     }
 }

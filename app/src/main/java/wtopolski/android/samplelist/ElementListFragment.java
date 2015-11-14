@@ -56,6 +56,8 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
 
         getLoaderManager().initLoader(LOAD_CURSOR_ID, new Bundle(), this);
 
+        ((MainActivity)getActivity()).mToolbar.setSubtitle(R.string.fragment_list);
+
         return view;
     }
 
