@@ -2,7 +2,6 @@ package wtopolski.android.samplelist;
 
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,8 @@ public class ElementAdapter extends RecyclerView.Adapter<ElementHolder> {
     private int titleColumnIndex;
     private int descColumnIndex;
 
+    private ListFragment.ListFragmentItemClickListener mListener;
+
     @Override
     public ElementHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_list_element, viewGroup, false);
@@ -34,11 +35,21 @@ public class ElementAdapter extends RecyclerView.Adapter<ElementHolder> {
         }
 
         if (mCursor.moveToPosition(position)) {
+            final long id = mCursor.getLong(idColumnIndex);
+
             Element element = elementHolder.getElement();
-            element.setId(mCursor.getLong(idColumnIndex));
+            element.setId(id);
             element.setTitle(mCursor.getString(titleColumnIndex));
             element.setDesc(mCursor.getString(descColumnIndex));
             elementHolder.updateView();
+            elementHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        mListener.onListFragmentItemClick(id);
+                    }
+                }
+            });
         }
     }
 
@@ -60,5 +71,9 @@ public class ElementAdapter extends RecyclerView.Adapter<ElementHolder> {
         }
 
         notifyDataSetChanged();
+    }
+
+    public void setListener(ListFragment.ListFragmentItemClickListener listener) {
+        mListener = listener;
     }
 }

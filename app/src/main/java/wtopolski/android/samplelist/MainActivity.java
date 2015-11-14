@@ -7,13 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.Date;
 
 import wtopolski.android.samplelist.db.DBContract;
 import wtopolski.android.samplelist.db.ElementProvider;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ListFragment.ListFragmentItemClickListener {
     private Toolbar toolbar;
 
     @Override
@@ -97,5 +98,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListFragmentItemClick(long position) {
+        Toast.makeText(this, "Position " + position, Toast.LENGTH_SHORT).show();
     }
 }

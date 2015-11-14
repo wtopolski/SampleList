@@ -30,6 +30,11 @@ public class ElementHolder extends RecyclerView.ViewHolder {
         mDesc.setText(mElement.getDesc());
     }
 
+    public void setOnClickListener(View.OnClickListener listener) {
+        view.setClickable(true);
+        view.setOnClickListener(listener);
+    }
+
     public Element getElement() {
         return mElement;
     }
