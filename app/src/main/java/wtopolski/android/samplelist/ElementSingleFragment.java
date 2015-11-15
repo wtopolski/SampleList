@@ -8,6 +8,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import wtopolski.android.samplelist.db.DBContract;
@@ -29,18 +31,22 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     public static final String ARGUMENT_ID = "id";
     public static final long ARGUMENT_NONE = -1L;
 
-    private TextView textValue;
+    private EditText titleEdit;
+    private EditText descEdit;
+    private Element element;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        element = new Element();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_single, container, false);
-        textValue = (TextView) view.findViewById(R.id.text_value);
+        titleEdit = (EditText) view.findViewById(R.id.title);
+        descEdit = (EditText) view.findViewById(R.id.description);
         return view;
     }
 
@@ -112,12 +118,11 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
                         int titleColumnIndex = cursor.getColumnIndex(DBContract.ElementTable.TITLE_COLUMN);
                         int descColumnIndex = cursor.getColumnIndex(DBContract.ElementTable.DESC_COLUMN);
 
-                        Element element = new Element();
                         element.setId(cursor.getLong(idColumnIndex));
                         element.setTitle(cursor.getString(titleColumnIndex));
                         element.setDesc(cursor.getString(descColumnIndex));
 
-                        textValue.setText(element.toString());
+                        updateForm();
                     }
                 }
                 break;
@@ -126,12 +131,20 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         }
     }
 
+    private void updateForm() {
+        String title = element.getTitle();
+        title = TextUtils.isEmpty(title) ? "" : title;
+        titleEdit.setText(title);
+
+        String desc = element.getDesc();
+        desc = TextUtils.isEmpty(desc) ? "" : desc;
+        descEdit.setText(desc);
+    }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // TODO ???
     }
-
-
 
 /*
         // Insert test
