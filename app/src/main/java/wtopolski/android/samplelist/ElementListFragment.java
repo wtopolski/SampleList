@@ -7,7 +7,6 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,13 +21,11 @@ import wtopolski.android.samplelist.db.ElementProvider;
  * A placeholder fragment containing a simple view.
  */
 public class ElementListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
     private static final int LOAD_CURSOR_ID = 1;
 
     private ListFragmentItemClickListener mListener;
     private ElementListAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private FloatingActionButton fab;
 
     @Override
     public void onAttach(Activity activity) {
@@ -58,34 +55,26 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
 
         getLoaderManager().initLoader(LOAD_CURSOR_ID, new Bundle(), this);
 
-//        Snackbar.make(content, "FAB Clicked", Snackbar.LENGTH_SHORT).show();
-
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onNewItemClick();
-            }
-        });
-
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainActivity)getActivity()).mToolbar.setSubtitle(R.string.fragment_list); // TODO Do it better!
+        mListener.listFragmentUpdateToolbar(getString(R.string.fragment_list));
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mAdapter.setListener(mListener);
+        mListener.showFAB(true);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        mListener.showFAB(false);
         mAdapter.setListener(null);
     }
 
@@ -141,6 +130,7 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
 
     public interface ListFragmentItemClickListener {
         void onListFragmentItemClick(long position);
-        void onNewItemClick();
+        void listFragmentUpdateToolbar(String value);
+        void showFAB(boolean value);
     }
 }

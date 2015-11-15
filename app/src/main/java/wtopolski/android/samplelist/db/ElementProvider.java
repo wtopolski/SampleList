@@ -46,7 +46,9 @@ public class ElementProvider extends ContentProvider {
 
         switch (uriMatcher.match(uri)) {
             case ELEMENT_LIST:
-                return db.query(DBContract.ElementTable.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                Cursor cursor = db.query(DBContract.ElementTable.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                return cursor;
 
             case ELEMENT:
                 String selectionTmp = DBContract.ElementTable._ID + "='" + uri.getLastPathSegment() + "'";
