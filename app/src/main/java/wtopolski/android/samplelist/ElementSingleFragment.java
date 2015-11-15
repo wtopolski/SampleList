@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -211,16 +210,33 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     }
 
     private boolean updateAction() {
+        if (element == null || element.getId() <= ARGUMENT_NONE) {
+            return false;
+        }
 
+        boolean isTitleEmpty = TextUtils.isEmpty(element.getTitle());
+        boolean isDescEmpty = TextUtils.isEmpty(element.getDesc());
 
+        if (isTitleEmpty && isDescEmpty) {
+            return false;
+        }
 
-/*
-        // Update test
-        values = new ContentValues();
-        values.put(DBContract.ElementTable.DESC_COLUMN, "desc update");
-        int updateCount = getContentResolver().update(newUri, values, null, null);
-        Log.d("wtopolski", "updateCount: " + updateCount);*/
-        return false;
+        if (isTitleEmpty) {
+            element.setTitle("No title");
+        }
+
+        if (isDescEmpty) {
+            element.setDesc("No description");
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(DBContract.ElementTable.TITLE_COLUMN, element.getTitle());
+        values.put(DBContract.ElementTable.DESC_COLUMN, element.getDesc());
+
+        Uri updateUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_URI, element.getId());
+        int updateCount = getActivity().getContentResolver().update(updateUri, values, null, null);
+
+        return updateCount > 0;
     }
 
     @Override

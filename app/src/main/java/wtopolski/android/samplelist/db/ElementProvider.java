@@ -131,13 +131,19 @@ public class ElementProvider extends ContentProvider {
                 }
                 selection = selection + selectionTmp;
                 count = db.update(DBContract.ElementTable.TABLE_NAME, values, selection, selectionArgs);
+                if (count > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
                 break;
 
             default:
                 throw new IllegalArgumentException("Unsupported URI for update : " + uri);
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (count > 0) {
+            getContext().getContentResolver().notifyChange(ELEMENT_URI, null);
+        }
+
         return count;
     }
 
