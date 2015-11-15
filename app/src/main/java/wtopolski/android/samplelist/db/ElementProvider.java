@@ -73,9 +73,8 @@ public class ElementProvider extends ContentProvider {
             case ELEMENT_LIST:
                 long id = db.insert(DBContract.ElementTable.TABLE_NAME, null, values);
                 if (id > 0) {
-                    Uri notifyUri = ContentUris.withAppendedId(uri, id);
-                    getContext().getContentResolver().notifyChange(notifyUri, null);
-                    return notifyUri;
+                    getContext().getContentResolver().notifyChange(uri, null);
+                    return ContentUris.withAppendedId(uri, id);
                 }
                 throw new RuntimeException("Problem while inserting into uri" + uri);
 
