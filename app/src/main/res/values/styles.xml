@@ -1,8 +1,36 @@
 <resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorPrimaryDark">#1B5E20</item>
+
+        <item name="colorAccent">#CDDC39</item>
+        <item name="colorSwitchThumbNormal">#CDDC39</item>
+        <item name="colorControlNormal">#CDDC39</item>
+        <item name="colorControlActivated">#AFB42B</item>
+        <item name="colorControlHighlight">#827717</item>
+
+        <item name="android:textColorPrimary">#37474F</item>
+        <item name="actionMenuTextColor">#37474F</item>
+        <item name="android:textColorSecondary">#546E7A</item>
+
     </style>
 
+    <style name="Theme.ToolbarTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorPrimaryDark">#1B5E20</item>
+
+        <item name="colorAccent">#CDDC39</item>
+        <item name="colorSwitchThumbNormal">#CDDC39</item>
+        <item name="colorControlNormal">#CDDC39</item>
+        <item name="colorControlActivated">#AFB42B</item>
+        <item name="colorControlHighlight">#827717</item>
+
+        <item name="android:textColorPrimary">#37474F</item>
+        <item name="actionMenuTextColor">#37474F</item>
+        <item name="android:textColorSecondary">#546E7A</item>
+        <item name="android:background">#4CAF50</item>
+    </style>
 </resources>

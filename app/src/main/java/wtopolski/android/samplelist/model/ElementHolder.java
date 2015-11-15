@@ -1,10 +1,11 @@
-package wtopolski.android.samplelist;
+package wtopolski.android.samplelist.model;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import wtopolski.android.samplelist.R;
 import wtopolski.android.samplelist.model.Element;
 
 /**
@@ -20,14 +21,19 @@ public class ElementHolder extends RecyclerView.ViewHolder {
     public ElementHolder(View itemView) {
         super(itemView);
         mElement = new Element();
-        view = itemView;
-        mTitle = (TextView) view.findViewById(R.id.list_element_title);
-        mDesc = (TextView) view.findViewById(R.id.list_element_desc);
+        view = itemView.findViewById(R.id.list_element_box);
+        mTitle = (TextView) itemView.findViewById(R.id.list_element_title);
+        mDesc = (TextView) itemView.findViewById(R.id.list_element_desc);
     }
 
     public void updateView() {
         mTitle.setText(mElement.getTitle());
         mDesc.setText(mElement.getDesc());
+    }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        view.setClickable(true);
+        view.setOnClickListener(listener);
     }
 
     public Element getElement() {
