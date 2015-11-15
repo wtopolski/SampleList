@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 public class ElementSingleFragment extends Fragment {
 
     public static final String ARGUMENT_ID = "id";
+    public static final long ARGUMENT_NONE = -1L;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,9 +27,13 @@ public class ElementSingleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_single, container, false);
 
-        ((MainActivity)getActivity()).mToolbar.setSubtitle(R.string.fragment_single);
-
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((MainActivity)getActivity()).mToolbar.setSubtitle(R.string.fragment_single); // TODO Do it better!
     }
 
     @Override

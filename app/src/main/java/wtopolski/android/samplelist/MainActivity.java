@@ -57,6 +57,11 @@ public class MainActivity extends AppCompatActivity implements ElementListFragme
     }
 
     @Override
+    public void onNewItemClick() {
+        onListFragmentItemClick(ElementSingleFragment.ARGUMENT_NONE);
+    }
+
+    @Override
     public void onBackPressed() {
         if (!mFragmentManager.popBackStackImmediate()) {
             super.onBackPressed();
