@@ -4,13 +4,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,6 +54,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         element = new Element();
+        element.setId(ARGUMENT_NONE);
     }
 
     @Override
@@ -59,6 +62,41 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         View view = inflater.inflate(R.layout.fragment_single, container, false);
         titleEdit = (EditText) view.findViewById(R.id.title);
         descEdit = (EditText) view.findViewById(R.id.description);
+
+        titleEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                element.setTitle(editable.toString());
+            }
+        });
+
+        descEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                element.setDesc(editable.toString());
+            }
+        });
+
         return view;
     }
 
@@ -72,9 +110,29 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         if (arguments != null) {
             long id = arguments.getLong(ARGUMENT_ID, ARGUMENT_NONE);
             bundle.putLong(ARGUMENT_ID, id);
-            Log.d("wtopolski", "id: " + id);
         }
         getLoaderManager().initLoader(LOAD_CURSOR_ID, bundle, this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mListener.showFAB(false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Auto add/update action.
+        if (element.getId() > ARGUMENT_NONE) {
+            if (updateAction()) {
+                mListener.notifyUser(getString(R.string.update_notification));
+            }
+        } else {
+            if (addAction()) {
+                mListener.notifyUser(getString(R.string.add_notification));
+            }
+        }
     }
 
     @Override
@@ -123,6 +181,64 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         return false;
     }
 
+    private boolean addAction() {
+        if (element == null) {
+            return false;
+        }
+
+        boolean isTitleEmpty = TextUtils.isEmpty(element.getTitle());
+        boolean isDescEmpty = TextUtils.isEmpty(element.getDesc());
+
+        if (isTitleEmpty && isDescEmpty) {
+            return false;
+        }
+
+        if (isTitleEmpty) {
+            element.setTitle("No title");
+        }
+
+        if (isDescEmpty) {
+            element.setDesc("No description");
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(DBContract.ElementTable.TITLE_COLUMN, element.getTitle());
+        values.put(DBContract.ElementTable.DESC_COLUMN, element.getDesc());
+        Uri newUri = getActivity().getContentResolver().insert(ElementProvider.ELEMENT_URI, values);
+
+        return newUri != null;
+    }
+
+    private boolean updateAction() {
+        if (element == null || element.getId() <= ARGUMENT_NONE) {
+            return false;
+        }
+
+        boolean isTitleEmpty = TextUtils.isEmpty(element.getTitle());
+        boolean isDescEmpty = TextUtils.isEmpty(element.getDesc());
+
+        if (isTitleEmpty && isDescEmpty) {
+            return false;
+        }
+
+        if (isTitleEmpty) {
+            element.setTitle("No title");
+        }
+
+        if (isDescEmpty) {
+            element.setDesc("No description");
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(DBContract.ElementTable.TITLE_COLUMN, element.getTitle());
+        values.put(DBContract.ElementTable.DESC_COLUMN, element.getDesc());
+
+        Uri updateUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_URI, element.getId());
+        int updateCount = getActivity().getContentResolver().update(updateUri, values, null, null);
+
+        return updateCount > 0;
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         switch (id) {
@@ -150,6 +266,10 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOAD_CURSOR_ID:
+                // Reset
+                element.setId(ARGUMENT_NONE);
+
+                // Fill
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         int idColumnIndex = cursor.getColumnIndex(DBContract.ElementTable._ID);
@@ -187,6 +307,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     public interface SingleFragmentItemClickListener {
         void singleFragmentUpdateToolbar(String value);
         void notifyUser(String value);
+        void showFAB(boolean value);
     }
 
 /*
