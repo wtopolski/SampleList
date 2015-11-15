@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import wtopolski.android.samplelist.db.DBContract;
 import wtopolski.android.samplelist.db.ElementProvider;
@@ -73,6 +72,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         if (arguments != null) {
             long id = arguments.getLong(ARGUMENT_ID, ARGUMENT_NONE);
             bundle.putLong(ARGUMENT_ID, id);
+            Log.d("wtopolski", "id: " + id);
         }
         getLoaderManager().initLoader(LOAD_CURSOR_ID, bundle, this);
     }
@@ -91,18 +91,36 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
-            getActivity().onBackPressed();
+            if (deleteAction()) {
+                mListener.notifyUser(getString(R.string.delete_notification));
+                getActivity().onBackPressed();
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean deleteAction() {
+        if (element == null) {
+            return false;
+        }
+
+        long id = element.getId();
+        if (id < 0) {
+            return false;
+        }
+
+        Uri deleteUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_URI, id);
+        int deleteCount = getActivity().getContentResolver().delete(deleteUri, null, null); // TODO Should be in background thread
+        if (deleteCount > 0) {
+            getActivity().getContentResolver().notifyChange(ElementProvider.ELEMENT_URI, null);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -117,7 +135,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
                                 DBContract.ElementTable.TITLE_COLUMN,
                                 DBContract.ElementTable.DESC_COLUMN};
 
-                        Uri elementUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_URI, id);
+                        Uri elementUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_URI, elementId);
                         return new CursorLoader(getActivity(), elementUri, projection, null, null, null);
                     }
                 }
@@ -168,6 +186,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
 
     public interface SingleFragmentItemClickListener {
         void singleFragmentUpdateToolbar(String value);
+        void notifyUser(String value);
     }
 
 /*

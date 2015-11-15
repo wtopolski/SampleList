@@ -5,6 +5,7 @@
     <string name="fragment_single">Single</string>
     <string name="title">Title</string>
     <string name="desc">Description</string>
+    <string name="delete_notification">Item deleted!</string>
 
     <!-- Manifest -->
     <string name="element_provider" translatable="false">wtopolski.android.elementprovider</string>
