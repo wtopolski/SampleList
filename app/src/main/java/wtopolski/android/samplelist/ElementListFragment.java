@@ -74,7 +74,7 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainActivity)getActivity()).mToolbar.setSubtitle(R.string.fragment_list); // TODO Do it better!
+        mListener.listFragmentUpdateToolbar(getString(R.string.fragment_list));
     }
 
     @Override
@@ -142,5 +142,6 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
     public interface ListFragmentItemClickListener {
         void onListFragmentItemClick(long position);
         void onNewItemClick();
+        void listFragmentUpdateToolbar(String value);
     }
 }

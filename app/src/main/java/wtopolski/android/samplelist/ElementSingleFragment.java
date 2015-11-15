@@ -1,5 +1,6 @@
 package wtopolski.android.samplelist;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentUris;
@@ -31,9 +32,21 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     public static final String ARGUMENT_ID = "id";
     public static final long ARGUMENT_NONE = -1L;
 
+    private SingleFragmentItemClickListener mListener;
+
     private EditText titleEdit;
     private EditText descEdit;
     private Element element;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (getActivity() instanceof SingleFragmentItemClickListener) {
+            mListener = (SingleFragmentItemClickListener) activity;
+        } else {
+            throw new RuntimeException("Activity must implement SingleFragmentItemClickListener interface");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +66,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainActivity) getActivity()).mToolbar.setSubtitle(R.string.fragment_single); // TODO Do it better!
+        mListener.singleFragmentUpdateToolbar(getString(R.string.fragment_single));
 
         Bundle bundle = new Bundle();
         Bundle arguments = getArguments();
@@ -62,6 +75,12 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
             bundle.putLong(ARGUMENT_ID, id);
         }
         getLoaderManager().initLoader(LOAD_CURSOR_ID, bundle, this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -144,6 +163,10 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // TODO ???
+    }
+
+    public interface SingleFragmentItemClickListener {
+        void singleFragmentUpdateToolbar(String value);
     }
 
 /*

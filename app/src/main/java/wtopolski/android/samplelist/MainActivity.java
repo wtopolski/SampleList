@@ -7,8 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity implements ElementListFragment.ListFragmentItemClickListener {
+public class MainActivity extends AppCompatActivity implements ElementListFragment.ListFragmentItemClickListener, ElementSingleFragment.SingleFragmentItemClickListener {
     public Toolbar mToolbar;
     private FragmentManager mFragmentManager;
 
@@ -59,6 +60,24 @@ public class MainActivity extends AppCompatActivity implements ElementListFragme
     @Override
     public void onNewItemClick() {
         onListFragmentItemClick(ElementSingleFragment.ARGUMENT_NONE);
+    }
+
+    @Override
+    public void listFragmentUpdateToolbar(String value) {
+        mToolbar.setSubtitle(value);
+        mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+        mToolbar.setNavigationOnClickListener(null);
+    }
+
+    @Override
+    public void singleFragmentUpdateToolbar(String value) {
+        mToolbar.setSubtitle(value);
+        mToolbar.setNavigationIcon(R.drawable.ic_back_navigation);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
