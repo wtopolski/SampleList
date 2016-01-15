@@ -3,19 +3,23 @@ package wtopolski.android.samplelist;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import wtopolski.android.samplelist.db.DBContract;
 import wtopolski.android.samplelist.db.ElementProvider;
+import wtopolski.android.samplelist.model.ElementHolder;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -52,6 +56,35 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
+
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                // Determine id.
+                long id = -1;
+                if (viewHolder instanceof ElementHolder) {
+                    ElementHolder elementHolder = (ElementHolder) viewHolder;
+                    id = elementHolder.getElement().getId();
+                }
+
+                // Delete item & notify
+                Uri deleteUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_URI, id);
+                int deleteCount = getActivity().getContentResolver().delete(deleteUri, null, null); // TODO Should be in background thread
+                if (deleteCount > 0) {
+                    getActivity().getContentResolver().notifyChange(ElementProvider.ELEMENT_URI, null);
+                    mListener.notifyUser(getString(R.string.delete_notification));
+                }
+            }
+        };
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        touchHelper.attachToRecyclerView(mRecyclerView);
 
         getLoaderManager().initLoader(LOAD_CURSOR_ID, new Bundle(), this);
 
@@ -131,6 +164,7 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
     public interface ListFragmentItemClickListener {
         void onListFragmentItemClick(long position);
         void listFragmentUpdateToolbar(String value);
+        void notifyUser(String value);
         void showFAB(boolean value);
     }
 }
