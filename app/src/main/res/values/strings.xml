@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sample List</string>
+    <string name="app_name">Another Sample List</string>
     <string name="action_delete">Delete</string>
     <string name="fragment_list">List</string>
     <string name="fragment_single">Single</string>
