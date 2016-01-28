@@ -7,6 +7,7 @@ public class Element {
     private long id;
     private String title;
     private String desc;
+    private long priority;
 
     public long getId() {
         return id;
@@ -32,12 +33,21 @@ public class Element {
         this.desc = desc;
     }
 
+    public long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(long priority) {
+        this.priority = priority;
+    }
+
     @Override
     public String toString() {
         return "Element{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", desc='" + desc + '\'' +
+                ", priority='" + priority + '\'' +
                 '}';
     }
 }

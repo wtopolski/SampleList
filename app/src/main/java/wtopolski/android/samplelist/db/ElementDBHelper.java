@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class ElementDBHelper extends SQLiteOpenHelper {
 
     ElementDBHelper(Context context) {
-        super(context, DBContract.DB_NAME, null, 1);
+        super(context, DBContract.DB_NAME, null, 2);
     }
 
     @Override
@@ -24,7 +24,9 @@ public class ElementDBHelper extends SQLiteOpenHelper {
         sb.append(DBContract.ElementTable.TITLE_COLUMN);
         sb.append(" TEXT, ");
         sb.append(DBContract.ElementTable.DESC_COLUMN);
-        sb.append(" TEXT)");
+        sb.append(" TEXT, ");
+        sb.append(DBContract.ElementTable.PRIORITY_COLUMN);
+        sb.append(" INTEGER)");
 
         db.execSQL(sb.toString());
     }
@@ -32,5 +34,8 @@ public class ElementDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Not implemented
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("ALTER TABLE " + DBContract.ElementTable.TABLE_NAME + " ADD COLUMN  " + DBContract.ElementTable.PRIORITY_COLUMN + " INTEGER");
+        }
     }
 }

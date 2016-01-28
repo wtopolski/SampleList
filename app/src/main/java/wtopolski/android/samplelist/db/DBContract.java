@@ -12,5 +12,6 @@ public class DBContract {
         public static String TABLE_NAME = "elements";
         public static String TITLE_COLUMN = "title";
         public static String DESC_COLUMN = "desc";
+        public static String PRIORITY_COLUMN = "priority";
     }
 }

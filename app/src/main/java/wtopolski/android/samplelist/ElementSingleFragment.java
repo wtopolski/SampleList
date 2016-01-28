@@ -204,6 +204,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         ContentValues values = new ContentValues();
         values.put(DBContract.ElementTable.TITLE_COLUMN, element.getTitle());
         values.put(DBContract.ElementTable.DESC_COLUMN, element.getDesc());
+        values.put(DBContract.ElementTable.PRIORITY_COLUMN, System.currentTimeMillis());
         Uri newUri = getActivity().getContentResolver().insert(ElementProvider.ELEMENT_URI, values);
 
         return newUri != null;

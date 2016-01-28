@@ -20,9 +20,11 @@ public class ElementProvider extends ContentProvider {
 
     public static String AUTHORITY;
     public static Uri ELEMENT_URI;
+    public static Uri ELEMENT_SILENT_URI;
 
     static final int ELEMENT = 1;
-    static final int ELEMENT_LIST = 2;
+    static final int ELEMENT_SILENT = 2;
+    static final int ELEMENT_LIST = 3;
 
     private UriMatcher uriMatcher;
 
@@ -30,9 +32,11 @@ public class ElementProvider extends ContentProvider {
     public boolean onCreate() {
         AUTHORITY = getContext().getString(R.string.element_provider);
         ELEMENT_URI = Uri.parse("content://" + AUTHORITY + "/elements");
+        ELEMENT_SILENT_URI = Uri.parse("content://" + AUTHORITY + "/elements_silent");
 
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, "elements/*", ELEMENT);
+        uriMatcher.addURI(AUTHORITY, "elements_silent/*", ELEMENT_SILENT);
         uriMatcher.addURI(AUTHORITY, "elements", ELEMENT_LIST);
 
         helper = new ElementDBHelper(getContext());
@@ -116,14 +120,18 @@ public class ElementProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         SQLiteDatabase db = helper.getWritableDatabase();
         int count;
+        String selectionTmp;
 
         switch (uriMatcher.match(uri)) {
             case ELEMENT_LIST:
                 count = db.update(DBContract.ElementTable.TABLE_NAME, values, selection, selectionArgs);
+                if (count > 0) {
+                    getContext().getContentResolver().notifyChange(ELEMENT_URI, null);
+                }
                 break;
 
             case ELEMENT:
-                String selectionTmp = DBContract.ElementTable._ID + "='" + uri.getLastPathSegment() + "'";
+                selectionTmp = DBContract.ElementTable._ID + "='" + uri.getLastPathSegment() + "'";
                 if (TextUtils.isEmpty(selection)) {
                     selection = "";
                 } else {
@@ -136,12 +144,19 @@ public class ElementProvider extends ContentProvider {
                 }
                 break;
 
+            case ELEMENT_SILENT:
+                selectionTmp = DBContract.ElementTable._ID + "='" + uri.getLastPathSegment() + "'";
+                if (TextUtils.isEmpty(selection)) {
+                    selection = "";
+                } else {
+                    selection += " and ";
+                }
+                selection = selection + selectionTmp;
+                count = db.update(DBContract.ElementTable.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unsupported URI for update : " + uri);
-        }
-
-        if (count > 0) {
-            getContext().getContentResolver().notifyChange(ELEMENT_URI, null);
         }
 
         return count;
