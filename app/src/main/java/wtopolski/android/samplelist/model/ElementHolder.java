@@ -1,5 +1,7 @@
 package wtopolski.android.samplelist.model;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -38,5 +40,15 @@ public class ElementHolder extends RecyclerView.ViewHolder {
 
     public Element getElement() {
         return mElement;
+    }
+
+    public void onItemSelected() {
+        mTitle.setTypeface(Typeface.DEFAULT_BOLD);
+        mDesc.setTypeface(Typeface.DEFAULT_BOLD);
+    }
+
+    public void onItemClear() {
+        mTitle.setTypeface(Typeface.DEFAULT);
+        mDesc.setTypeface(Typeface.DEFAULT);
     }
 }

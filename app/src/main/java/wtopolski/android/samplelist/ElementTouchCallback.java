@@ -55,4 +55,25 @@ public class ElementTouchCallback extends ItemTouchHelper.Callback {
 
         mAdapter.deleteItem(viewHolder.getAdapterPosition(), id);
     }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+            if (viewHolder instanceof ElementHolder) {
+                ElementHolder elementHolder = (ElementHolder) viewHolder;
+                elementHolder.onItemSelected();
+            }
+        }
+        super.onSelectedChanged(viewHolder, actionState);
+    }
+
+    @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+
+        if (viewHolder instanceof ElementHolder) {
+            ElementHolder itemViewHolder = (ElementHolder) viewHolder;
+            itemViewHolder.onItemClear();
+        }
+    }
 }
