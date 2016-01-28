@@ -3,6 +3,7 @@ package wtopolski.android.samplelist.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 
 /**
  * Created by 10c on 2015-11-12.
@@ -14,7 +15,7 @@ public class ElementDBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(@NonNull SQLiteDatabase db) {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE ");
         sb.append(DBContract.ElementTable.TABLE_NAME);
@@ -32,7 +33,7 @@ public class ElementDBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
         // Not implemented
         if (oldVersion == 1 && newVersion == 2) {
             db.execSQL("ALTER TABLE " + DBContract.ElementTable.TABLE_NAME + " ADD COLUMN  " + DBContract.ElementTable.PRIORITY_COLUMN + " INTEGER");

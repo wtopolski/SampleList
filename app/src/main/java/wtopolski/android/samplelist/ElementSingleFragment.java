@@ -10,6 +10,8 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,6 +35,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     public static final String ARGUMENT_ID = "id";
     public static final long ARGUMENT_NONE = -1L;
 
+    @Nullable
     private SingleFragmentItemClickListener mListener;
 
     private EditText titleEdit;
@@ -58,7 +61,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_single, container, false);
         titleEdit = (EditText) view.findViewById(R.id.title);
         descEdit = (EditText) view.findViewById(R.id.description);
@@ -75,7 +78,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(@NonNull Editable editable) {
                 element.setTitle(editable.toString());
             }
         });
@@ -92,7 +95,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(@NonNull Editable editable) {
                 element.setDesc(editable.toString());
             }
         });
@@ -148,7 +151,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
             if (deleteAction()) {
@@ -240,8 +243,9 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
         return updateCount > 0;
     }
 
+    @Nullable
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle bundle) {
         switch (id) {
             case LOAD_CURSOR_ID:
                 if (bundle != null) {
@@ -264,7 +268,7 @@ public class ElementSingleFragment extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, @Nullable Cursor cursor) {
         switch (loader.getId()) {
             case LOAD_CURSOR_ID:
                 // Reset

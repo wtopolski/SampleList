@@ -5,6 +5,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +26,7 @@ import wtopolski.android.samplelist.model.ElementHolder;
  */
 public class ElementListAdapter extends RecyclerView.Adapter<ElementHolder> {
 
+    @Nullable
     private Cursor mCursor;
     private Context mCtx;
 
@@ -35,15 +41,16 @@ public class ElementListAdapter extends RecyclerView.Adapter<ElementHolder> {
         mCtx = ctx;
     }
 
+    @NonNull
     @Override
-    public ElementHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ElementHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_list_element, viewGroup, false);
         return new ElementHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ElementHolder elementHolder, int position) {
-        if (mCursor == null || mCursor.isClosed()) {
+    public void onBindViewHolder(@Nullable ElementHolder elementHolder, int position) {
+        if (mCursor == null || mCursor.isClosed() || elementHolder == null) {
             return;
         }
 
@@ -75,7 +82,7 @@ public class ElementListAdapter extends RecyclerView.Adapter<ElementHolder> {
         return 0;
     }
 
-    public void setCursor(Cursor cursor) {
+    public void setCursor(@Nullable Cursor cursor) {
         mCursor = cursor;
 
         if (cursor != null) {
@@ -102,15 +109,23 @@ public class ElementListAdapter extends RecyclerView.Adapter<ElementHolder> {
         }
     }
 
-    public boolean moveItem(int positionView, int positionTarget, Element from, Element target) {
+    @UiThread
+    public boolean moveItem(@IntRange(from=0) int positionView, @IntRange(from=0) int positionTarget, @NonNull final Element from, @NonNull final Element target) {
         // SWAP
         long priority = from.getPriority();
         from.setPriority(target.getPriority());
         target.setPriority(priority);
 
-        // SAVE
-        storeInDB(from);
-        storeInDB(target);
+        // SAVE - TODO here should be some queue.
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                storeInDB(from);
+                storeInDB(target);
+            }
+        };
+        thread.run();
 
         // DISPLAY
         notifyItemMoved(positionView, positionTarget);
@@ -118,8 +133,8 @@ public class ElementListAdapter extends RecyclerView.Adapter<ElementHolder> {
         return true;
     }
 
-    // TODO Should be in background thread
-    private boolean storeInDB(Element element) {
+    @WorkerThread
+    private boolean storeInDB(@NonNull Element element) {
         ContentValues values = new ContentValues();
         values.put(DBContract.ElementTable.PRIORITY_COLUMN, element.getPriority());
         Uri updateUri = ContentUris.withAppendedId(ElementProvider.ELEMENT_SILENT_URI, element.getId());

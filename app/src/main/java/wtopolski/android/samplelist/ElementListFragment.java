@@ -7,6 +7,8 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,7 @@ import wtopolski.android.samplelist.db.ElementProvider;
 public class ElementListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int LOAD_CURSOR_ID = 1;
 
+    @Nullable
     private ListFragmentItemClickListener mListener;
     private ElementListAdapter mAdapter;
 
@@ -44,7 +47,7 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
@@ -93,6 +96,7 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
         mListener = null;
     }
 
+    @Nullable
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
@@ -112,7 +116,7 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case LOAD_CURSOR_ID:
                 mAdapter.setCursor(data);
@@ -123,7 +127,7 @@ public class ElementListFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         switch (loader.getId()) {
             case LOAD_CURSOR_ID:
                 mAdapter.setCursor(null);

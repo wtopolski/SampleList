@@ -1,5 +1,6 @@
 package wtopolski.android.samplelist;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
@@ -31,7 +32,7 @@ public class ElementTouchCallback extends ItemTouchHelper.Callback {
         }
 
         Element targetElement = null;
-        if (viewHolder instanceof ElementHolder) {
+        if (targetHolder instanceof ElementHolder) {
             targetElement = ((ElementHolder) targetHolder).getElement();
         }
 
@@ -68,7 +69,7 @@ public class ElementTouchCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public void clearView(RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
 
         if (viewHolder instanceof ElementHolder) {

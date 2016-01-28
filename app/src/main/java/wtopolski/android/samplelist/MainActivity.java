@@ -3,6 +3,8 @@ package wtopolski.android.samplelist;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements ElementListFragme
     }
 
     @Override
-    public void onListFragmentItemClick(long position) {
+    public void onListFragmentItemClick(@IntRange(from = -1) long position) {
         Bundle bundle = new Bundle();
         bundle.putLong(ElementSingleFragment.ARGUMENT_ID, position);
 
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements ElementListFragme
     }
 
     @Override
-    public void notifyUser(String value) {
+    public void notifyUser(@NonNull String value) {
         Snackbar.make(mCoordinatorContainer, "" + value, Snackbar.LENGTH_SHORT).show();
     }
 

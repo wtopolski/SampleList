@@ -1,5 +1,7 @@
 package wtopolski.android.samplelist.model;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by wtopolski on 13.11.15.
  */
@@ -41,6 +43,7 @@ public class Element {
         this.priority = priority;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Element{" +
